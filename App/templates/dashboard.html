@@ -1,0 +1,21 @@
+{% extends "layout.html"%}
+
+{%  block body%}
+
+    <h3>Connection: <span id="connection_id">...</span></h3>
+
+    <label for="red_led">Red LED</label>
+    <input type="radio" name="led_control" id="red_led" onclick="handleClick(this);">
+
+    <label for="green_led">Green LED</label>
+    <input type="radio" name="led_control" id="green_led" onclick="handleClick(this);">
+
+    <h3>Parking Space 1: <span id="space1_id">...</span></h3>
+    <h3>Parking Space 2: <span id="space2_id">...</span></h3>
+    <h3>Parking Space 3: <span id="space3_id">...</span></h3>
+    <h3>Parking Space 4: <span id="space4_id">...</span></h3>
+    <h3>Parking Space 1: <span id="space1_id">...</span></h3>
+    <h3>Parking Space 1: <span id="space1_id">...</span></h3>
+    <h3>Parking Space 1: <span id="space1_id">...</span></h3>
+
+{%  endblock %}
