@@ -98,16 +98,23 @@ def keep_alive():
 
 
 @app.route("/status=<name>-<action>", methods=["POST"])
+@app.route("/status=<name>-<action>", methods=["POST"])
 def event(name, action):
     global data
     if name == "red_led":
         if action == "on":
             data["LED"] = True
+            turn_on_led()
         elif action == "off":
             data["LED"] = False
-    return str("ok")
+            turn_off_led()
+    elif name == "green_led" and action == "on":
+        data["LED"] = False
+        turn_off_led()
+    return "ok"
+
 
 if __name__ == "__main__":
     sensorsThread = threading.Thread(target=measure_distance)
     sensorsThread.start()
-    app.run(host = "127.0.0.1", port = 50000, debug = True)
+    app.run(host = "172.20.10.4", port = 5000, debug = True)

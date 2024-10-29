@@ -43,15 +43,14 @@ function keepAlive()
 
 function handleClick(cb)
 {
-    if(cb.checked)
-    {
-        value="on";
+    let value;
+    if (cb.id === "green_led") {
+        value = "off"; // Interpret green_led selection as turning off the red_led
+        sendEvent("red_led-" + value);
+    } else {
+        value = cb.checked ? "on" : "off";
+        sendEvent(cb.id + "-" + value);
     }
-    else
-    {
-        value = "off";
-    }
-    sendEvent(cb.id+"-"+value);
 }
 
 function sendEvent(value)
