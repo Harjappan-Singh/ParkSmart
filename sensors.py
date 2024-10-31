@@ -35,15 +35,17 @@ time.sleep(1)
 publish_result = pubnub.publish().channel(app_channel).message("Hello from Park Smart Pi").sync()
 
 def handle_message(message):
-    print(message.message)
-   #msg = json.loads(json.dumps(message.message))
-    msg = json.loads(message.message) if isinstance(message.message, str) else message.message
+    msg = message.message if isinstance(message.message, dict) else json.loads(message.message)
+    print("Received message:", msg) 
     if 'LED' in msg:
-        print("LED status: ",msg['LED'])
-        if msg['LED'] == 'on':
+        led_status = msg['LED']
+        print("LED status: ", led_status)
+        if led_status == 'on':
             data["LED"] = True
-        elif msg['LED'] == 'off':
+            turn_on_led()
+        elif led_status == 'off':
             data["LED"] = False
+            turn_off_led()
 
 subscription.on_message = lambda message: handle_message(message)
 subscription.subscribe()
@@ -100,19 +102,17 @@ def measure_distance():
             print("Distance:", distance, "cms")
 
             # Check distance and control LED
-            if distance < 5:
+            if distance < 5 and not trigger:
                 turn_on_led()
-                # print("LED ON: Object detected within 5 cms")
                 trigger = True
-                pubnub.publish().channel(app_channel).message('"Occupied":"Yes"').sync()
-                time.sleep(1)
-            elif trigger:
-                pubnub.publish().channel(app_channel).message('"Occupied":"No"').sync()
+                pubnub.publish().channel(app_channel).message({"Occupied": "Yes"}).sync()
+                print("Published: Occupied - Yes")
+
+            elif distance >= 5 and trigger:
                 turn_off_led()
                 trigger = False
-            # else:
-            #     GPIO.output(LED, GPIO.LOW)
-            #     print("LED OFF: No object within 5 cms")
+                pubnub.publish().channel(app_channel).message({"Occupied": "No"}).sync()
+                print("Published: Occupied - No")
 
             if data["LED"]:
                 turn_on_led()
@@ -123,6 +123,8 @@ def measure_distance():
     except KeyboardInterrupt:
         print("Measurement stopped by user")
         GPIO.cleanup()
+    except Exception as e:
+        print("Error during measurement:", e)
 
 if __name__ == "__main__":
     main()
