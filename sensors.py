@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 from pubnub.pnconfiguration import PNConfiguration
-from pubnub.pubnub import PubNub
+from pubnub.pubnub import PubNub, SubscribeListener
 import os
 from dotenv import load_dotenv
 
