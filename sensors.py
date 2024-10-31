@@ -4,6 +4,11 @@ from pubnub.pnconfiguration import PNConfiguration
 from pubnub.pubnub import PubNub, SubscribeListener
 import os
 from dotenv import load_dotenv
+import json
+
+
+sensors_list = ["LED"]
+data = {}
 
 # this will replace default SubscribeListener with thing that will print out messages to console
 class Listener(SubscribeListener):
@@ -25,12 +30,22 @@ pubnub.add_listener(Listener())
 
 subscription = pubnub.channel(app_channel).subscription()
 
-subscription.on_message = lambda message: print(f'Message from {message.publisher}: {message.message}')
+subscription.on_message = lambda message: handle_message(message)
 subscription.subscribe()
 
 time.sleep(1)
 # publish 
-publish_result = pubnub.publish().channel(app_channel).message("Hello from PubNub Python SDK").sync()
+publish_result = pubnub.publish().channel(app_channel).message("Hello from Park Smart Pi").sync()
+
+def handle_message(message):
+    print(message.message)
+    msg = json.loads(json.dumps(message.message))
+    if 'message' in msg:
+        LED = msg['message']['LED']
+        if LED == 'on':
+            data["LED"] = True
+        elif LED == 'off':
+            data["LED"] = False
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -47,10 +62,18 @@ GPIO.setup(LED, GPIO.OUT)
 def main():
     measure_distance()
 
+def turn_on_led():
+    GPIO.output(LED, GPIO.HIGH)
+
+def turn_off_led():
+    GPIO.output(LED, GPIO.LOW)
+
 def measure_distance():
     """Continuously measures and prints distance every 3 seconds."""
     print("Starting distance measurement")
-    
+    data["LED"] = False
+    trigger = False
+
     try:
         while True:
             GPIO.output(TRIG, False)
@@ -77,11 +100,21 @@ def measure_distance():
 
             # Check distance and control LED
             if distance < 5:
-                GPIO.output(LED, GPIO.HIGH)
-                print("LED ON: Object detected within 5 cms")
-            else:
-                GPIO.output(LED, GPIO.LOW)
-                print("LED OFF: No object within 5 cms")
+                turn_on_led()
+                # print("LED ON: Object detected within 5 cms")
+                trigger = True
+                pubnub.publish().channel(app_channel).message('"Occupied":"Yes"').sync()
+                time.sleep(1)
+            elif trigger:
+                pubnub.publish().channel(app_channel).message('"Occupied":"No"').sync()
+                turn_off_led()
+                trigger = False
+            # else:
+            #     GPIO.output(LED, GPIO.LOW)
+            #     print("LED OFF: No object within 5 cms")
+
+            if data["LED"]:
+                turn_on_led()
             
             # Wait for 3 seconds before the next measurement
             time.sleep(3)
