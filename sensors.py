@@ -1,5 +1,36 @@
 import RPi.GPIO as GPIO
 import time
+from pubnub.pnconfiguration import PNConfiguration
+from pubnub.pubnub import PubNub
+import os
+from dotenv import load_dotenv
+
+# this will replace default SubscribeListener with thing that will print out messages to console
+class Listener(SubscribeListener):
+    def status(self, pubnub, status):
+        print(f'Status: \n{status.category.name}')
+
+
+load_dotenv()
+
+config = PNConfiguration()
+config.subscribe_key = os.getenv('PUBNUB_SUBSCRIBE_KEY')
+config.publish_key = os.getenv('PUBNUB_PUBLISH_KEY')
+config.user_id = os.getenv('PUBNUB_PI_USER_ID')
+
+app_channel = "parksmart_pi_channel"
+
+pubnub = PubNub(config)
+pubnub.add_listener(Listener())
+
+subscription = pubnub.channel(app_channel).subscription()
+
+subscription.on_message = lambda message: print(f'Message from {message.publisher}: {message.message}')
+subscription.subscribe()
+
+time.sleep(1)
+# publish 
+publish_result = pubnub.publish().channel(app_channel).message("Hello from PubNub Python SDK").sync()
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
