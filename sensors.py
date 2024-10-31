@@ -30,22 +30,23 @@ pubnub.add_listener(Listener())
 
 subscription = pubnub.channel(app_channel).subscription()
 
-subscription.on_message = lambda message: handle_message(message)
-subscription.subscribe()
-
 time.sleep(1)
 # publish 
 publish_result = pubnub.publish().channel(app_channel).message("Hello from Park Smart Pi").sync()
 
 def handle_message(message):
     print(message.message)
-    msg = json.loads(json.dumps(message.message))
-    if 'message' in msg:
-        LED = msg['message']['LED']
-        if LED == 'on':
+   #msg = json.loads(json.dumps(message.message))
+    msg = json.loads(message.message) if isinstance(message.message, str) else message.message
+    if 'LED' in msg:
+        print("LED status: ",msg['LED'])
+        if msg['LED'] == 'on':
             data["LED"] = True
-        elif LED == 'off':
+        elif msg['LED'] == 'off':
             data["LED"] = False
+
+subscription.on_message = lambda message: handle_message(message)
+subscription.subscribe()
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
