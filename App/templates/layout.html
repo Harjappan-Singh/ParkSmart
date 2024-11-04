@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Park Smart</title>
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.8.2.8.js"></script>
     <script src="static/main.js"></script>
 </head>
-<body onload="keepAlive(); time();">
+<body onload="keepAlive(); time(); setupPubNub();">
     {%  block body %}
     {%  endblock %}
 </body>
