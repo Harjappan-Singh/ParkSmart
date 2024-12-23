@@ -1,47 +1,35 @@
-.control {
-    display: flex;
-    margin-bottom: 15px;
-    gap: 20px;
+:root {
+    --primary-color: #1f2937;
+    --secondary-color: #ffffff;
+    --accent-color: #3b82f6; 
+    --muted-color: #9ca3af;
+    --card-bg: #f3f4f6;
 }
 
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 25px;
+html, body {
+    height: 100%; 
+    margin: 0;
 }
 
-.switch input {
-    opacity: 0;
+body {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
 }
 
-.slider {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    border-radius: 25px;
-    transition: 0.4s;
+h1, h3 {
+    color: var(--accent-color);
 }
 
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    border-radius: 50%;
-    background-color: white;
-    left: 4px;
-    bottom: 3.5px;
-    transition: 0.4s;
+.card {
+    background-color: var(--card-bg);
+    color: var(--primary-color);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-input:checked + .slider {
-    background-color: #4caf50;
-}
-
-input:checked + .slider:before {
-    transform: translateX(24px);
+.card h3 {
+    color: var(--primary-color);
 }

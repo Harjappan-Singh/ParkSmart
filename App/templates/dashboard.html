@@ -1,44 +1,58 @@
-{% extends "layout.html"%}
+{% extends "layout.html" %}
 
-{%  block body%}
+{% block body %}
 
-<h1>DASHBOARD</h1>
-    <div class="controls">
-        <div class="control">
-            <span>Monitor</span>
-            <label class="switch">
-                <input type="checkbox" id="parkSmartMonitorToggle">
-                <span class="slider"></span>
+<div class="container mx-auto p-6">
+    <h1 class="text-4xl font-bold text-center mb-8">Dashboard</h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
+        <div class="form-control w-full max-w-xs mx-auto card">
+            <label class="label cursor-pointer">
+                <span class="label-text text-lg font-medium">Monitor Parking Space</span>
+                <input type="checkbox" class="toggle toggle-warning" id="parkSmartMonitorToggle" />
             </label>
         </div>
-        <div class="control">
-            <span>Red LED</span>
-            <label class="switch">
-                <input type="checkbox" id="redLedToggle">
-                <span class="slider"></span>
+
+        <div class="form-control w-full max-w-xs mx-auto card">
+            <label class="label cursor-pointer">
+                <span class="label-text text-lg font-medium">Red LED</span>
+                <input type="checkbox" class="toggle toggle-error" id="redLedToggle" />
             </label>
         </div>
-        <div class="control">
-            <span>Green LED</span>
-            <label class="switch">
-                <input type="checkbox" id="greenLedToggle">
-                <span class="slider"></span>
+
+        <div class="form-control w-full max-w-xs mx-auto card">
+            <label class="label cursor-pointer">
+                <span class="label-text text-lg font-medium">Green LED</span>
+                <input type="checkbox" class="toggle toggle-success" id="greenLedToggle" />
             </label>
         </div>
     </div>
 
-    <div>
-        <p>Current Vehicle inside parking lot <span id="vehicleCount"></span></p>
+    <div class="card text-center mb-8">
+        <p class="text-xl font-semibold">
+            Current Vehicles Inside Parking Lot: 
+            <span id="vehicleCount" class="text-accent-color">0</span>
+        </p>
     </div>
 
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="card">
+            <h3 class="text-lg font-semibold mb-2">Parking Space 1</h3>
+            <span class="space1">...</span>
+        </div>
+        <div class="card">
+            <h3 class="text-lg font-semibold mb-2">Parking Space 2</h3>
+            <span class="space2">...</span>
+        </div>
+        <div class="card">
+            <h3 class="text-lg font-semibold mb-2">Parking Space 3</h3>
+            <span class="space3">...</span>
+        </div>
+        <div class="card">
+            <h3 class="text-lg font-semibold mb-2">Parking Space 4</h3>
+            <span class="space4">...</span>
+        </div>
+    </div>
+</div>
 
-    <!-- For now, just for display I am using classes, otherwise each parking space will be unique (unique ids) -->
-    <h3>Parking Space 1: <span class="space1">...</span></h3>
-    <h3>Parking Space 2: <span class="space2">...</span></h3>
-    <h3>Parking Space 3: <span class="space3">...</span></h3>
-    <h3>Parking Space 4: <span class="space4">...</span></h3>
-    <h3>Parking Space 1: <span class="space1">...</span></h3>
-    <h3>Parking Space 1: <span class="space1">...</span></h3>
-    <h3>Parking Space 1: <span class="space1">...</span></h3>
-
-{%  endblock %}
+{% endblock %}
