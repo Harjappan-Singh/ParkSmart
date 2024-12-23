@@ -1,11 +1,13 @@
 const publishKey = "pub-c-34b92735-3dad-43e4-b3a6-1b0634db6003";
 const subscribeKey = "sub-c-af85c9fa-2327-45c8-accc-1b7a929001dc";
 const channelName = "parksmart_pi_channel";
+const secretKey = "topSecret1234567"
 
 const pubnub = new PubNub({
     publishKey: publishKey,
     subscribeKey: subscribeKey,
     uuid: 'harjappan_mac',
+    cryptoModule: PubNub.CryptoModule.aesCbcCryptoModule({cipherKey:secretKey}),
 });
 
 // --- Initialization Functions ---
@@ -57,8 +59,6 @@ function handleIncomingMessage(event) {
         } else if (msg.vehicle_count !== undefined) {
             console.log("Current vehicle count:", msg.vehicle_count);
             document.querySelector('#vehicleCount').innerHTML = msg.vehicle_count
-        } else {
-            console.log("Unknown message format:", msg);
         }
     } catch (error) {
         console.error("Error handling incoming message:", error);
