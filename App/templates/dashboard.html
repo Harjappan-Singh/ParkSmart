@@ -2,13 +2,36 @@
 
 {%  block body%}
 
-    <h3>Connection: <span id="connection_id">...</span></h3>
+<h1>DASHBOARD</h1>
+    <div class="controls">
+        <div class="control">
+            <span>Monitor</span>
+            <label class="switch">
+                <input type="checkbox" id="parkSmartMonitorToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="control">
+            <span>Red LED</span>
+            <label class="switch">
+                <input type="checkbox" id="redLedToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="control">
+            <span>Green LED</span>
+            <label class="switch">
+                <input type="checkbox" id="greenLedToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
 
-    <label for="red_led">Red LED</label>
+    <!-- <label for="red_led">Red LED</label>
     <input type="radio" name="led_control" id="red_led" onclick="handleClick(this);">
 
     <label for="green_led">Green LED</label>
-    <input type="radio" name="led_control" id="green_led" onclick="handleClick(this);">
+    <input type="radio" name="led_control" id="green_led" onclick="handleClick(this);"> -->
 
     <h3>Parking Space 1: <span id="space1_id">...</span></h3>
     <h3>Parking Space 2: <span id="space2_id">...</span></h3>
