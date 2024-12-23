@@ -7,6 +7,8 @@ from pubnub.pnconfiguration import PNConfiguration
 from pubnub.pubnub import PubNub
 from pubnub.callbacks import SubscribeCallback 
 from dotenv import load_dotenv
+from pubnub.crypto import AesCbcCryptoModule
+from Cryptodome.Cipher import AES 
 
 load_dotenv()
 
@@ -26,6 +28,10 @@ pnconfig.subscribe_key = os.getenv('PUBNUB_SUBSCRIBE_KEY')
 pnconfig.publish_key =  os.getenv('PUBNUB_PUBLISH_KEY')
 pnconfig.ssl = False
 pnconfig.uuid = os.getenv('PUBNUB_PI_USER_ID')
+pnconfig.cipher_key = os.getenv('PUBNUB_CIPHER_KEY')
+pnconfig.cipher_mode = AES.MODE_GCM
+pnconfig.fallback_cipher_mode = AES.MODE_CBC
+pnconfig.crypto_module = AesCbcCryptoModule(pnconfig)
 pubnub = PubNub(pnconfig)
 
 CHANNEL = os.getenv('PUBNUB_CHANNEL')
