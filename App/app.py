@@ -4,6 +4,10 @@ import time
 from flask_dance.contrib.google import make_google_blueprint, google
 import os
 from functools import wraps
+import my_db
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_APP_SECRET_KEY")
@@ -23,6 +27,11 @@ google_bp = make_google_blueprint(
 
 app.register_blueprint(google_bp, url_prefix="/login")
 
+db = my_db.db
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("MYSQL_DATABASE_URI")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db.init_app(app)
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -40,7 +49,10 @@ def google_login():
     user_info = response.json()
 
     session["user"] = user_info.get("name")
+    session["email"] = user_info.get("email")
     session["client_id"] = user_info.get("id")
+
+    my_db.add_user_and_login(user_info.get("name"), user_info.get("id"), user_info.get("email"))
 
     return redirect(url_for("dashboard"))
 
