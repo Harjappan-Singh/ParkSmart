@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<h1>Admin Panel</h1>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="container mx-auto px-6 py-4">
+        <div class="bg-gray-800 text-white p-4 rounded-lg shadow-lg">
+            <ul class="space-y-2">
+                {% for category, message in messages %}
+                <li class="p-2 rounded {{ 'bg-green-500' if category == 'success' else 'bg-red-500' }}">
+                    {{ message }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+    {% endwith %}
+<p>Here is the list of users:</p>
+<table border="1" style="width: 100%; border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Read Access</th>
+            <th>Write Access</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.read_access }}</td>
+            <td>{{ user.write_access }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+                <form action="{{ url_for('update_access') }}" method="POST" style="display: inline;">
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                    <button type="submit" name="action" value="grant_read">Grant Read</button>
+                    <button type="submit" name="action" value="grant_read_write">Grant Read/Write</button>
+                    <button type="submit" name="action" value="revoke_access">Revoke Access</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -43,3 +43,19 @@ def add_user_and_login(name, client_id, email, token=None):
         new_user = User(name, client_id, token, 1, 0, 0, email)
         db.session.add(new_user)
         db.session.commit()
+
+# Get all users
+def get_all_users():
+    return User.query.all()
+
+# Update user access levels
+def update_user_access(user_id, read_access=None, write_access=None):
+    user = User.query.get(user_id)
+    if user:
+        if read_access is not None:
+            user.read_access = read_access
+        if write_access is not None:
+            user.write_access = write_access
+        db.session.commit()
+        return True
+    return False

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, session, url_for, flash
+from flask import Flask, render_template, redirect, session, url_for, flash, request
 import json
 import time
 from flask_dance.contrib.google import make_google_blueprint, google
@@ -79,6 +79,48 @@ def not_authorized():
 def dashboard():
     return render_template("dashboard.html")
 
+@app.route("/admin_panel")
+@login_required
+def admin_panel():
+    if session["client_id"] == os.getenv("ADMIN_CLIENT_ID"):
+        users = my_db.get_all_users()
+        users_list = []
+        for user in users:
+            users_list.append({
+                'id': user.id,
+                'name': user.name,
+                'read_access': user.read_access,
+                'write_access': user.write_access,
+                'email': user.email
+            })
+        return render_template("admin_panel.html", users = users_list)
+    else:
+        return render_template("non_admin.html")
 
+@app.route("/update_access", methods=["POST"])
+@login_required
+def update_access():
+    if session["client_id"] == os.getenv("ADMIN_CLIENT_ID"):
+        user_id = request.form.get("user_id")
+        action = request.form.get("action")
+        
+        if action == "grant_read":
+            success = my_db.update_user_access(user_id, read_access=1)
+        elif action == "grant_read_write":
+            success = my_db.update_user_access(user_id, read_access=1, write_access=1)
+        elif action == "revoke_access":
+            success = my_db.update_user_access(user_id, read_access=0, write_access=0)
+        else:
+            success = False
+        
+        if success:
+            flash("User access updated successfully!", "success")
+        else:
+            flash("Failed to update user access.", "error")
+        
+        return redirect(url_for("admin_panel"))
+    else:
+        return render_template("non_admin.html")
+    
 if __name__ == "__main__":
     app.run(port = 5000, debug = True)
