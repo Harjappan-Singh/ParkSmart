@@ -59,3 +59,37 @@ def update_user_access(user_id, read_access=None, write_access=None):
         db.session.commit()
         return True
     return False
+
+# Get user_id from their client id
+def get_user_id(client_id):
+    user = User.query.filter_by(client_id=client_id).first()
+    return user.id if user else None
+
+class Parking_Lot(db.Model):
+    __tablename__ = "parking_lot"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    parking_spot = db.Column(db.String(10), nullable=False)
+    status = db.Column(db.String(20), nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+
+    def __init__(self, user_id, parking_spot, status):
+        self.user_id = user_id
+        self.parking_spot = parking_spot
+        self.status = status
+
+# Add an entry for a parking_space status for the parking lot ( belonging to specific user )
+def add_parking_status(user_id, parking_spot, status):
+    user = User.query.get(user_id)
+    if user:
+        new_parking_entry = Parking_Lot(user_id=user_id, parking_spot=parking_spot, status=status)
+        db.session.add(new_parking_entry)
+        db.session.commit()
+        return new_parking_entry
+    else:
+        raise ValueError("User with the given ID does not exist.")
+    
+
+# Get all the the entries in the parking_lot table for logged in user
+def get_parking_entries_by_user(user_id):
+    return Parking_Lot.query.filter_by(user_id=user_id).all()

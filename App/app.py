@@ -122,5 +122,19 @@ def update_access():
     else:
         return render_template("non_admin.html")
     
+@app.route("/view_past_data")
+@login_required
+def view_past_data():
+    user_id = my_db.get_user_id(session["client_id"])
+    parking_lot_data = my_db.get_parking_entries_by_user(user_id=user_id)
+    parking_lot_entry_list = []
+    for entry in parking_lot_data:
+        parking_lot_entry_list.append({
+            'parking_spot': entry.parking_spot,
+            'status': entry.status,
+            'timestamp': entry.timestamp,
+        })
+    return render_template("parking_lot_past_data.html", entries = parking_lot_entry_list)
+
 if __name__ == "__main__":
     app.run(port = 5000, debug = True)
