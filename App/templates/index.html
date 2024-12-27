@@ -1,51 +1,80 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-700 text-white">
-    <div class="container mx-auto px-6 py-12 text-center">
-        <img src="{{ url_for('static', filename='images/parksmartlogo.png') }}" alt="Park Smart Logo" class="mx-auto mb-6 w-32 h-32">
-        <h1 class="text-4xl font-bold mb-8">Welcome to <span class="text-accent-color">Park Smart</span></h1>
-        <p class="text-lg mb-12">
-            Revolutionizing parking management for lot owners with real-time monitoring and control.
-        </p>
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div class="container mx-auto px-6 py-12 flex flex-col md:flex-row items-center space-y-8 md:space-y-0">
+        <div class="w-full md:w-1/2">
+            <img src="{{ url_for('static', filename='images/parksmartlogo.png') }}" alt="Park Smart Logo" class="mx-auto mb-6 w-32 h-32 md:w-48 md:h-48">
+        </div>
+
+        <div class="w-full md:w-1/2 text-center md:text-left">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Welcome to <span class="text-accent-color">Park Smart</span></h1>
+            <p class="text-lg text-gray-700 mb-8">
+                Revolutionizing parking management for lot owners with real-time monitoring and control.
+            </p>
+            <a href="{{ url_for('google.login') }}"
+               class="inline-flex items-center px-6 py-3 bg-blue-700 text-white text-lg font-medium rounded-lg shadow hover:bg-blue-600 transition">
+                <img src="{{ url_for('static', filename='images/google_icon.png') }}" alt="Google Icon" class="w-6 h-6 mr-2">
+                Continue with Google
+            </a>
+        </div>
     </div>
 
-    <div class="container mx-auto px-6 py-8">
-        <ul class="list-disc list-inside text-lg space-y-6">
-            <li>
-                This website will help parking lot owners monitor the number of parking spaces available and booked in the lot.
-                <ul class="list-disc list-inside pl-6 text-base text-gray-300 mt-2 space-y-2">
-                    <li>IR Beam Breaker is used to count the number of cars entering the parking lot.</li>
-                    <li>Ultrasonic sensors monitor specific parking spaces inside the lot.</li>
-                    <li>
-                        For future, two IR Beam Breakers could track cars exiting as well.
-                    </li>
+    <div class="container mx-auto px-6 py-12">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Features</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Monitor Parking Spaces</h3>
+                <p class="text-gray-700 mb-4">
+                    This website helps parking lot owners track available and booked parking spaces in real-time.
+                </p>
+                <ul class="list-disc pl-6 text-gray-600 space-y-2">
+                    <li>IR Beam Breaker counts the number of cars entering the lot.</li>
+                    <li>Ultrasonic sensors monitor specific parking spaces.</li>
+                    <li>Future updates will track cars exiting as well.</li>
                 </ul>
-            </li>
-            <li>LEDs (red and green) at the entrance notify traffic about available parking spaces.</li>
-            <li>
-                Control the LED light at the entrance via the website, e.g., switch to red during maintenance.
-            </li>
-            <li>
-                Future enhancements may include an app for drivers to view and book available parking spaces.
-            </li>
-            <li>
-                Target users: parking lot owners with two subscription levels:
-                <ul class="list-disc list-inside pl-6 text-base text-gray-300 mt-2 space-y-2">
-                    <li><strong>Read Access</strong>: View car entries.</li>
-                    <li><strong>Read and Write Access</strong>: Control LEDs to manage traffic during maintenance.</li>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Control Parking Traffic</h3>
+                <p class="text-gray-700 mb-4">
+                    Manage the LED lights at the entrance to indicate available spaces or during maintenance.
+                </p>
+                <ul class="list-disc pl-6 text-gray-600 space-y-2">
+                    <li>LEDs (red/green) indicate available parking spaces.</li>
+                    <li>Switch LED lights remotely during maintenance periods.</li>
+                    <li>Future plans include a driver app for booking spaces.</li>
                 </ul>
-            </li>
-        </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-6 py-12">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Subscription Levels</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Read Access</h3>
+                <p class="text-gray-700 mb-4">
+                    View car entries in the parking lot with limited controls.
+                </p>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Read and Write Access</h3>
+                <p class="text-gray-700 mb-4">
+                    Full control to monitor car entries and manage LED lights for traffic control.
+                </p>
+            </div>
+        </div>
     </div>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     <div class="container mx-auto px-6 py-4">
-        <div class="bg-gray-800 text-white p-4 rounded-lg shadow-lg">
+        <div class="bg-white text-gray-800 p-4 rounded-lg shadow-lg">
             <ul class="space-y-2">
                 {% for category, message in messages %}
-                <li class="p-2 rounded {{ 'bg-green-500' if category == 'success' else 'bg-red-500' }}">
+                <li class="p-2 rounded {{ 'bg-green-100' if category == 'success' else 'bg-red-100' }}">
                     {{ message }}
                 </li>
                 {% endfor %}
@@ -54,13 +83,5 @@
     </div>
     {% endif %}
     {% endwith %}
-
-    <div class="container mx-auto px-6 py-12 text-center">
-        <a href="{{ url_for('google.login') }}"
-           class="inline-flex items-center px-6 py-3 bg-blue-600 text-white text-lg font-medium rounded-lg shadow hover:bg-blue-700 transition">
-            <img src="{{ url_for('static', filename='images/google_icon.png') }}" alt="Google Icon" class="w-6 h-6 mr-2">
-            Continue with Google
-        </a>
-    </div>
 </div>
 {% endblock %}

@@ -1,9 +1,10 @@
 :root {
-    --primary-color: #1f2937;
-    --secondary-color: #ffffff;
-    --accent-color: #3b82f6; 
-    --muted-color: #9ca3af;
-    --card-bg: #f3f4f6;
+    --primary-color: #ffffff; 
+    --secondary-color: #1f2937;
+    --accent-color: #3b82f6;
+    --muted-color: #6b7280; 
+    --card-bg: #f9fafb;
+    --border-color: #e5e7eb;
 }
 
 html, body {
@@ -16,20 +17,82 @@ body {
     color: var(--secondary-color);
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
+    line-height: 1.6;
 }
 
 h1, h3 {
     color: var(--accent-color);
+    font-weight: bold;
 }
 
 .card {
     background-color: var(--card-bg);
-    color: var(--primary-color);
+    color: var(--secondary-color); 
     border-radius: 8px;
     padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
 }
 
 .card h3 {
+    color: var(--secondary-color);
+}
+
+
+
+button {
+    background-color: var(--accent-color);
+    color: var(--secondary-color);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: darken(var(--accent-color), 10%);
+    transform: translateY(-2px);
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+nav a {
+    padding: 0.5rem 1rem;
+    color: var(--secondary-color);
+    border-radius: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+nav a:hover {
+    background-color: var(--card-bg);
+    color: var(--accent-color);
+}
+
+nav a.active {
+    background-color: var(--accent-color);
     color: var(--primary-color);
 }
