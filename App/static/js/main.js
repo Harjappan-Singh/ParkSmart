@@ -60,6 +60,8 @@ function handleIncomingMessage(event) {
                     element.innerHTML = value;
                 });
 
+                sendDataToBackend('/save_sensor_data', { parkingSpot: key, status: value });
+
             } else if (key === 'vehicle_count') {
                 // Message is vehicle count
                 console.log("Current vehicle count:", msg[key]);
@@ -97,4 +99,11 @@ function initializeToggleListeners() {
     setupToggleListener("parkSmartMonitorToggle", "parkSmartMonitor");
     setupToggleListener("redLedToggle", "redLed");
     setupToggleListener("greenLedToggle", "greenLed");
+}
+
+// --- Backend Communication ---
+function sendDataToBackend(endpoint, data) {
+    axios.post(endpoint, data)
+        .then(response => console.log(response.data.message || "Data saved successfully."))
+        .catch(error => console.error("Error sending data to backend:", error.response?.data?.error || error.message));
 }

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, session, url_for, flash, request
+from flask import Flask, render_template, redirect, session, url_for, flash, request, jsonify
 import json
 import time
 from flask_dance.contrib.google import make_google_blueprint, google
@@ -135,6 +135,20 @@ def view_past_data():
             'timestamp': entry.timestamp,
         })
     return render_template("parking_lot_past_data.html", entries = parking_lot_entry_list)
+
+@app.route("/save_sensor_data", methods=["POST"])
+@login_required
+def save_sensor_data():
+    print("saving sensor data method")
+    if request.method == "POST":
+        sensor_data = request.json
+        user_id = my_db.get_user_id(session["client_id"])
+        # print(sensor_data['parkingSpot'], sensor_data['status'])
+        try:        
+            my_db.add_parking_status(user_id, sensor_data['parkingSpot'], sensor_data['status'])
+            return jsonify({"message": "Successfully stored entry"}), 201
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(port = 5000, debug = True)

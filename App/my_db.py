@@ -87,8 +87,7 @@ def add_parking_status(user_id, parking_spot, status):
         db.session.commit()
         return new_parking_entry
     else:
-        raise ValueError("User with the given ID does not exist.")
-    
+        raise ValueError("User with the given ID does not exist.") 
 
 # Get all the the entries in the parking_lot table for logged in user
 def get_parking_entries_by_user(user_id):
