@@ -2,60 +2,66 @@
 
 {% block body %}
 
-<div class="container mx-auto p-6">
-    <h1 class="text-4xl font-bold text-center mb-8">Dashboard</h1>
+<div class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-700 text-white">
+    <div class="container mx-auto p-6 ">
+        <h1 class="text-4xl font-bold text-center mb-8">Dashboard</h1>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
-        <div class="form-control w-full max-w-xs mx-auto card">
-            <label class="label cursor-pointer">
-                <span class="label-text text-lg font-medium">Monitor Parking Space</span>
-                <input type="checkbox" class="toggle toggle-warning" id="parkSmartMonitorToggle" />
-            </label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
+            <div class="form-control w-full max-w-xs mx-auto card">
+                <label class="label cursor-pointer">
+                    <span class="label-text text-lg font-medium">Monitor Parking Space</span>
+                    <input type="checkbox" class="toggle toggle-warning" id="parkSmartMonitorToggle" />
+                </label>
+            </div>
+
+            <div class="form-control w-full max-w-xs mx-auto card">
+                <label class="label cursor-pointer">
+                    <span class="label-text text-lg font-medium">Red LED</span>
+                    <input type="checkbox" class="toggle toggle-error" id="redLedToggle" />
+                </label>
+            </div>
+
+            <div class="form-control w-full max-w-xs mx-auto card">
+                <label class="label cursor-pointer">
+                    <span class="label-text text-lg font-medium">Green LED</span>
+                    <input type="checkbox" class="toggle toggle-success" id="greenLedToggle" />
+                </label>
+            </div>
         </div>
 
-        <div class="form-control w-full max-w-xs mx-auto card">
-            <label class="label cursor-pointer">
-                <span class="label-text text-lg font-medium">Red LED</span>
-                <input type="checkbox" class="toggle toggle-error" id="redLedToggle" />
-            </label>
+        <div class="card text-center mb-8">
+            <p class="text-xl font-semibold">
+                Current Vehicles Inside Parking Lot: 
+                <span id="vehicleCount" class="text-accent-color">0</span>
+            </p>
         </div>
 
-        <div class="form-control w-full max-w-xs mx-auto card">
-            <label class="label cursor-pointer">
-                <span class="label-text text-lg font-medium">Green LED</span>
-                <input type="checkbox" class="toggle toggle-success" id="greenLedToggle" />
-            </label>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="card">
+                <h3 class="text-lg font-semibold mb-2">Parking Space 1</h3>
+                <span class="space1">...</span>
+            </div>
+            <div class="card">
+                <h3 class="text-lg font-semibold mb-2">Parking Space 2</h3>
+                <span class="space2">...</span>
+            </div>
+            <div class="card">
+                <h3 class="text-lg font-semibold mb-2">Parking Space 3</h3>
+                <span class="space3">...</span>
+            </div>
+            <div class="card">
+                <h3 class="text-lg font-semibold mb-2">Parking Space 4</h3>
+                <span class="space4">...</span>
+            </div>
         </div>
-    </div>
 
-    <div class="card text-center mb-8">
-        <p class="text-xl font-semibold">
-            Current Vehicles Inside Parking Lot: 
-            <span id="vehicleCount" class="text-accent-color">0</span>
-        </p>
-    </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="card">
-            <h3 class="text-lg font-semibold mb-2">Parking Space 1</h3>
-            <span class="space1">...</span>
+        <div class="container mx-auto px-6 py-12 text-center">
+        <a href="{{ url_for('logout') }}"
+            class="inline-flex items-center px-6 py-3 bg-blue-600 text-white text-lg font-medium rounded-lg shadow hover:bg-blue-700 transition">
+                Logout
+            </a>
         </div>
-        <div class="card">
-            <h3 class="text-lg font-semibold mb-2">Parking Space 2</h3>
-            <span class="space2">...</span>
-        </div>
-        <div class="card">
-            <h3 class="text-lg font-semibold mb-2">Parking Space 3</h3>
-            <span class="space3">...</span>
-        </div>
-        <div class="card">
-            <h3 class="text-lg font-semibold mb-2">Parking Space 4</h3>
-            <span class="space4">...</span>
-        </div>
-    </div>
-
-    <div>
-        <a href="{{ url_for('logout') }}" id="logoutBtn" class="logout">Logout</a>
     </div>
 </div>
 

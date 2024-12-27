@@ -1,42 +1,66 @@
-{% extends "layout.html"%}
+{% extends "layout.html" %}
 
-{%  block body%}
-<div>
-    <h1>
-        Park  Smart
-    </h1>
+{% block body %}
+<div class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-700 text-white">
+    <div class="container mx-auto px-6 py-12 text-center">
+        <img src="{{ url_for('static', filename='images/parksmartlogo.png') }}" alt="Park Smart Logo" class="mx-auto mb-6 w-32 h-32">
+        <h1 class="text-4xl font-bold mb-8">Welcome to <span class="text-accent-color">Park Smart</span></h1>
+        <p class="text-lg mb-12">
+            Revolutionizing parking management for lot owners with real-time monitoring and control.
+        </p>
+    </div>
 
-    <ul>
-        <li>
-            This website will help parking lot owners to monitor number of parking spaces available and booked in the lot
-        </li>
-        <li>
-            They can also control the LED light at the entrance from the website, like if there is still parking space available but
-            there is maintenance going on they can change the color from green to red.
-        </li>
-        <li>
-            For future, there will be an app from which users (drivers) can see the number of parking space available and book them by paying.
-        </li>
-    </ul>
+    <div class="container mx-auto px-6 py-8">
+        <ul class="list-disc list-inside text-lg space-y-6">
+            <li>
+                This website will help parking lot owners monitor the number of parking spaces available and booked in the lot.
+                <ul class="list-disc list-inside pl-6 text-base text-gray-300 mt-2 space-y-2">
+                    <li>IR Beam Breaker is used to count the number of cars entering the parking lot.</li>
+                    <li>Ultrasonic sensors monitor specific parking spaces inside the lot.</li>
+                    <li>
+                        For future, two IR Beam Breakers could track cars exiting as well.
+                    </li>
+                </ul>
+            </li>
+            <li>LEDs (red and green) at the entrance notify traffic about available parking spaces.</li>
+            <li>
+                Control the LED light at the entrance via the website, e.g., switch to red during maintenance.
+            </li>
+            <li>
+                Future enhancements may include an app for drivers to view and book available parking spaces.
+            </li>
+            <li>
+                Target users: parking lot owners with two subscription levels:
+                <ul class="list-disc list-inside pl-6 text-base text-gray-300 mt-2 space-y-2">
+                    <li><strong>Read Access</strong>: View car entries.</li>
+                    <li><strong>Read and Write Access</strong>: Control LEDs to manage traffic during maintenance.</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-    <div class="flashMessages">
-        <ul>
-            {% for category, message in messages %}
-            <li class="{{ category }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
+    <div class="container mx-auto px-6 py-4">
+        <div class="bg-gray-800 text-white p-4 rounded-lg shadow-lg">
+            <ul class="space-y-2">
+                {% for category, message in messages %}
+                <li class="p-2 rounded {{ 'bg-green-500' if category == 'success' else 'bg-red-500' }}">
+                    {{ message }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
     {% endif %}
     {% endwith %}
 
-    <div>
-        <a href="{{ url_for('google.login') }}">
-            Google Login
+    <div class="container mx-auto px-6 py-12 text-center">
+        <a href="{{ url_for('google.login') }}"
+           class="inline-flex items-center px-6 py-3 bg-blue-600 text-white text-lg font-medium rounded-lg shadow hover:bg-blue-700 transition">
+            <img src="{{ url_for('static', filename='images/google_icon.png') }}" alt="Google Icon" class="w-6 h-6 mr-2">
+            Continue with Google
         </a>
     </div>
-    
 </div>
-
-{%  endblock %}
+{% endblock %}

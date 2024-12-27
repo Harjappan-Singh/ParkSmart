@@ -1,6 +1,19 @@
-<div class="container">
-    <h1>403 - Forbidden</h1>
-    <p>You are not authorized to view this page.</p>
-    <p>Please <a href="{{ url_for('index') }}">log in</a> to continue.</p>
-    <a href="{{ url_for('index') }}" class="btn">Go to Login</a>
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-700 text-white flex items-center justify-center">
+    <div class="text-center p-8 bg-gray-800 rounded-lg shadow-lg max-w-md">
+        <h1 class="text-4xl font-bold text-red-500 mb-4">403 - Forbidden</h1>
+        <p class="text-lg mb-6">
+            You are not authorized to view this page.
+        </p>
+        <p class="text-base mb-6">
+            Please <a href="{{ url_for('index') }}" class="text-accent-color font-semibold underline">log in</a> to continue.
+        </p>
+        <a href="{{ url_for('index') }}" class="inline-block px-6 py-3 bg-blue-600 text-white text-lg font-medium rounded-lg shadow hover:bg-blue-700 transition">
+            Go to Login
+        </a>
+    </div>
 </div>
+{% endblock %}
+
