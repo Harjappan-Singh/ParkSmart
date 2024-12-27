@@ -46,24 +46,31 @@ function publishMessage(message, callback) {
 }
 
 function handleIncomingMessage(event) {
-     try {
-        // console.log("Received message:", event.message);
-
+    try {
         const msg = event.message;
 
-        if (msg.P1 !== undefined) {
-            console.log("P1 is", msg.P1);
-            document.querySelectorAll('.space1').forEach(element => {
-                element.innerHTML = msg.P1;
-            });
-        } else if (msg.vehicle_count !== undefined) {
-            console.log("Current vehicle count:", msg.vehicle_count);
-            document.querySelector('#vehicleCount').innerHTML = msg.vehicle_count
+        for (const key in msg) {
+            // Message is parking space
+            if (msg.hasOwnProperty(key) && key.startsWith('P')) { 
+                const value = msg[key];
+                // console.log(`${key} is`, value);
+
+                const className = `.space${key.substring(1)}`;
+                document.querySelectorAll(className).forEach(element => {
+                    element.innerHTML = value;
+                });
+
+            } else if (key === 'vehicle_count') {
+                // Message is vehicle count
+                console.log("Current vehicle count:", msg[key]);
+                document.querySelector('#vehicleCount').innerHTML = msg[key];
+            }
         }
     } catch (error) {
         console.error("Error handling incoming message:", error);
-     }
+    }
 }
+
 
 
 function handlePubNubStatus(statusEvent) {
