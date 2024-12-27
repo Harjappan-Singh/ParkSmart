@@ -14,6 +14,15 @@ const pubnub = new PubNub({
 function initApp() {
     subscribeToChannel();
     initializeToggleListeners();
+    // navigation bar responsiveness
+    document.getElementById('navbar-toggle').addEventListener('click', () => {
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenu.classList.contains('hidden')) {
+        mobileMenu.classList.remove('hidden');
+    } else {
+        mobileMenu.classList.add('hidden');
+    }
+});
 }
 
 document.addEventListener("DOMContentLoaded", initApp);

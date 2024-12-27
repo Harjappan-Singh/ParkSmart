@@ -4,17 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Park Smart</title>
+    <link rel="shortcut icon" href="../static/images/parksmartlogo.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="../static/css/app.css">
     <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.8.2.8.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    
-
 </head>
-<body >
-    {%  block body %}
-    {%  endblock %}
-    <script src="static/js/main.js"></script>
+<body class="bg-gradient-to-br from-gray-900 to-gray-700 text-white">
+    {% if 'user' in session %}
+        {% include "navbar.html" %}
+    {% endif %}
+
+    <div class="min-h-screen">
+        {% block body %}
+        {% endblock %}
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

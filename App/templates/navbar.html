@@ -1,0 +1,47 @@
+<div class="bg-gray-800 text-white shadow-lg">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <img src="{{ url_for('static', filename='images/parksmartlogo.png') }}" 
+                 alt="Park Smart Logo" class="w-12 h-12 mr-4">
+            <span class="text-2xl font-bold">Park Smart</span>
+        </div>
+
+        <button id="navbar-toggle" class="lg:hidden text-white focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+        </button>
+
+        <nav id="navbar-menu" 
+             class="hidden lg:flex lg:space-x-6 items-center">
+            <a href="{{ url_for('dashboard') }}" 
+               class="hover:text-green-400 transition {{ 'text-green-400 font-bold' if request.endpoint == 'dashboard' else '' }}">
+                Dashboard
+            </a>
+            <a href="{{ url_for('view_past_data') }}" 
+               class="hover:text-green-400 transition {{ 'text-green-400 font-bold' if request.endpoint == 'view_past_data' else '' }}">
+                Past Data
+            </a>
+            <a href="{{ url_for('admin_panel') }}" 
+               class="hover:text-green-400 transition {{ 'text-green-400 font-bold' if request.endpoint == 'admin_panel' else '' }}">
+                Admin Panel
+            </a>
+        </nav>
+    </div>
+
+    <div id="mobile-menu" class="hidden bg-gray-700 lg:hidden">
+        <a href="{{ url_for('dashboard') }}" 
+           class="block px-4 py-2 hover:bg-gray-600 hover:text-green-400 transition {{ 'bg-gray-600 text-green-400 font-bold' if request.endpoint == 'dashboard' else '' }}">
+            Dashboard
+        </a>
+        <a href="{{ url_for('view_past_data') }}" 
+           class="block px-4 py-2 hover:bg-gray-600 hover:text-green-400 transition {{ 'bg-gray-600 text-green-400 font-bold' if request.endpoint == 'view_past_data' else '' }}">
+            Past Data
+        </a>
+        <a href="{{ url_for('admin_panel') }}" 
+           class="block px-4 py-2 hover:bg-gray-600 hover:text-green-400 transition {{ 'bg-gray-600 text-green-400 font-bold' if request.endpoint == 'admin_panel' else '' }}">
+            Admin Panel
+        </a>
+    </div>
+</div>
