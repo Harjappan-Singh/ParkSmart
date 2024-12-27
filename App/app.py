@@ -105,7 +105,7 @@ def update_access():
         action = request.form.get("action")
         
         if action == "grant_read":
-            success = my_db.update_user_access(user_id, read_access=1)
+            success = my_db.update_user_access(user_id, read_access=1, write_access=0)
         elif action == "grant_read_write":
             success = my_db.update_user_access(user_id, read_access=1, write_access=1)
         elif action == "revoke_access":

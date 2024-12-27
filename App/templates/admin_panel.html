@@ -1,51 +1,72 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<h1>Admin Panel</h1>
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    <div class="container mx-auto px-6 py-4">
-        <div class="bg-gray-800 text-white p-4 rounded-lg shadow-lg">
+<div class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-700 text-white">
+    <div class="container mx-auto px-6 py-8">
+        <h1 class="text-4xl font-bold text-center mb-8">Admin Panel</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="bg-gray-800 text-white p-4 rounded-lg shadow-lg mb-6">
             <ul class="space-y-2">
                 {% for category, message in messages %}
-                <li class="p-2 rounded {{ 'bg-green-500' if category == 'success' else 'bg-red-500' }}">
+                <li class="p-3 rounded {{ 'bg-green-500' if category == 'success' else 'bg-red-500' }}">
                     {{ message }}
                 </li>
                 {% endfor %}
             </ul>
         </div>
+        {% endif %}
+        {% endwith %}
+
+        <p class="text-lg font-medium mb-6">Here is the list of users:</p>
+
+        <div class="overflow-x-auto bg-gray-800 rounded-lg shadow-lg">
+            <table class="table-auto w-full text-left border-collapse text-gray-300">
+                <thead>
+                    <tr class="bg-gray-700">
+                        <th class="px-4 py-2 border-b border-gray-600">ID</th>
+                        <th class="px-4 py-2 border-b border-gray-600">Name</th>
+                        <th class="px-4 py-2 border-b border-gray-600">Read Access</th>
+                        <th class="px-4 py-2 border-b border-gray-600">Write Access</th>
+                        <th class="px-4 py-2 border-b border-gray-600">Email</th>
+                        <th class="px-4 py-2 border-b border-gray-600">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr class="even:bg-gray-700 odd:bg-gray-800">
+                        <td class="px-4 py-2 border-b border-gray-600">{{ user.id }}</td>
+                        <td class="px-4 py-2 border-b border-gray-600">{{ user.name }}</td>
+                        <td class="px-4 py-2 border-b border-gray-600">
+                            {{ '✅' if user.read_access else '❌' }}
+                        </td>
+                        <td class="px-4 py-2 border-b border-gray-600">
+                            {{ '✅' if user.write_access else '❌' }}
+                        </td>
+                        <td class="px-4 py-2 border-b border-gray-600">{{ user.email }}</td>
+                        <td class="px-4 py-2 border-b border-gray-600">
+                            <form action="{{ url_for('update_access') }}" method="POST" class="inline-flex flex-wrap gap-2">
+                                <input type="hidden" name="user_id" value="{{ user.id }}">
+                                <button type="submit" name="action" value="grant_read" 
+                                    class="px-2 py-1 bg-green-500 text-white rounded shadow hover:bg-green-600 transition">
+                                    Grant Read
+                                </button>
+                                <button type="submit" name="action" value="grant_read_write" 
+                                    class="px-2 py-1 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition">
+                                    Grant Read/Write
+                                </button>
+                                <button type="submit" name="action" value="revoke_access" 
+                                    class="px-2 py-1 bg-red-500 text-white rounded shadow hover:bg-red-600 transition">
+                                    Revoke Access
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-    {% endif %}
-    {% endwith %}
-<p>Here is the list of users:</p>
-<table border="1" style="width: 100%; border-collapse: collapse;">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Read Access</th>
-            <th>Write Access</th>
-            <th>Email</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for user in users %}
-        <tr>
-            <td>{{ user.id }}</td>
-            <td>{{ user.name }}</td>
-            <td>{{ user.read_access }}</td>
-            <td>{{ user.write_access }}</td>
-            <td>{{ user.email }}</td>
-            <td>
-                <form action="{{ url_for('update_access') }}" method="POST" style="display: inline;">
-                    <input type="hidden" name="user_id" value="{{ user.id }}">
-                    <button type="submit" name="action" value="grant_read">Grant Read</button>
-                    <button type="submit" name="action" value="grant_read_write">Grant Read/Write</button>
-                    <button type="submit" name="action" value="revoke_access">Revoke Access</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+</div>
 {% endblock %}
