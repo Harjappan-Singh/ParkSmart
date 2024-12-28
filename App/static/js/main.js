@@ -2,6 +2,8 @@ const publishKey = "pub-c-34b92735-3dad-43e4-b3a6-1b0634db6003";
 const subscribeKey = "sub-c-af85c9fa-2327-45c8-accc-1b7a929001dc";
 const channelName = "parksmart_pi_channel";
 const secretKey = "topSecret1234567"
+const TOKEN_TTL_SECONDS = 60 * 60;
+let tokenRefreshTimer = null;
 
 const pubnub = new PubNub({
     publishKey: publishKey,
@@ -15,6 +17,7 @@ const pubnub = new PubNub({
 function initApp() {
     subscribeToChannel();
     initializeToggleListeners();
+    initializeTokenManagement();
     // navigation bar responsiveness
     document.getElementById('navbar-toggle').addEventListener('click', () => {
     const mobileMenu = document.getElementById('mobile-menu');
@@ -83,8 +86,6 @@ function handleIncomingMessage(event) {
     }
 }
 
-
-
 function handlePubNubStatus(statusEvent) {
     if (statusEvent.category === "PNConnectedCategory") {
         console.log("Successfully connected to PubNub channel.");
@@ -116,4 +117,41 @@ function sendDataToBackend(endpoint, data) {
     axios.post(endpoint, data)
         .then(response => console.log(response.data.message || "Data saved successfully."))
         .catch(error => console.error("Error sending data to backend:", error.response?.data?.error || error.message));
+}
+
+// --- Token Management ---
+function initializeTokenManagement() {
+    // console.log("Initializing token management...");
+    scheduleTokenRefresh();
+}
+
+function refreshToken() {
+    console.log("Refreshing token...");
+    axios.post('/refresh_user_token')
+        .then(response => {
+            const data = response.data;
+            if (data.success) {
+                console.log("Token refreshed successfully:", data.token);
+
+                pubnub.setAuthKey(data.token);
+
+                scheduleTokenRefresh();
+            } else {
+                console.error("Failed to refresh token:", data.error);
+            }
+        })
+        .catch(error => {
+            console.error("Error refreshing token:", error);
+        });
+}
+
+function scheduleTokenRefresh() {
+    if (tokenRefreshTimer) {
+        clearTimeout(tokenRefreshTimer);
+    }
+
+    const refreshTime = (TOKEN_TTL_SECONDS - 10) * 1000;
+    tokenRefreshTimer = setTimeout(refreshToken, refreshTime);
+
+    // console.log("Token refresh scheduled in:", refreshTime / 1000, "seconds");
 }

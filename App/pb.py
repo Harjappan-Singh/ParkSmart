@@ -17,11 +17,11 @@ def initialize_pubnub(uuid):
     return PubNub(pnconfig)
 
     
-def generate_token(user_id, ttl=5):
+def generate_token(user_id, ttl=60):
     try:
         pubnub = initialize_pubnub(user_id)
         
-        print(f"Granting token for user_id: {user_id}")
+        # print(f"Granting token for user_id: {user_id}")
         
         envelope = pubnub.grant_token() \
             .channels([Channel.id(CHANNEL_NAME).read().write()]) \
@@ -34,4 +34,12 @@ def generate_token(user_id, ttl=5):
         return token
     except Exception as e:
         print(f"Error generating token: {e}")
+        return None
+
+def refresh_token(user_id, ttl=60):
+    try:
+        new_token = generate_token(user_id, ttl=ttl)
+        return new_token
+    except Exception as e:
+        print(f"Error in refresh_token: {e}")
         return None

@@ -188,5 +188,22 @@ def upgrade_subscription():
         flash("Failed to update user access.", "error")
     
     return redirect(url_for("dashboard"))
+
+@app.route("/refresh_user_token", methods=["POST"])
+def refresh_user_token():
+    try:
+        user_uuid = session["client_id"]
+
+        new_token = pb.refresh_token(user_uuid, ttl=5)
+
+        my_db.update_user_token(user_uuid, new_token)
+
+        session["token"] = new_token
+
+        return jsonify({"success": True, "token": new_token}), 200
+    except Exception as e:
+        print(f"Error in refresh_token_endpoint: {e}")
+        return jsonify({"error": "Internal server error"}), 500
+
 if __name__ == "__main__":
     app.run(port = 5000, debug = True)
