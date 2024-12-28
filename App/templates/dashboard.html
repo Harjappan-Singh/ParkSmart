@@ -91,4 +91,8 @@
     </div>
 </div>
 
+<script>
+        window.userUUID = "{{ session['client_id'] }}"; 
+        window.token = "{{ session['token'] }}"; 
+    </script>
 {% endblock %}

@@ -10,7 +10,7 @@ CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(30),
     client_id VARCHAR(255) UNIQUE NOT NULL,
-    token VARCHAR(255),
+    token TEXT,
     login INT DEFAULT 0,
     read_access INT DEFAULT 0,
     write_access INT DEFAULT 0,

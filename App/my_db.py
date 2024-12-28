@@ -10,7 +10,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
     client_id = db.Column(db.String(255), unique=True)
-    token = db.Column(db.String(255))
+    token = db.Column(db.Text, nullable=True)
     login = db.Column(db.Integer)
     read_access = db.Column(db.Integer)     
     write_access = db.Column(db.Integer)   
@@ -69,6 +69,15 @@ def get_user_id(client_id):
 def get_user(client_id):
     user = User.query.filter_by(client_id=client_id).first()
     return user
+
+# Update token for a user
+def update_user_token(client_id, token):
+    user = get_user_row_if_exists(client_id)
+    if user:
+        user.token = token
+        db.session.commit()
+    else:
+        print(f"User with Client ID {client_id} not found.")
 
 class Parking_Lot(db.Model):
     __tablename__ = "parking_lot"

@@ -6,7 +6,8 @@ const secretKey = "topSecret1234567"
 const pubnub = new PubNub({
     publishKey: publishKey,
     subscribeKey: subscribeKey,
-    uuid: 'harjappan_mac',
+    uuid: window.userUUID,
+    authKey: window.token,
     cryptoModule: PubNub.CryptoModule.aesCbcCryptoModule({cipherKey:secretKey}),
 });
 

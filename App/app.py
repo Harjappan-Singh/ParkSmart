@@ -4,7 +4,7 @@ import time
 from flask_dance.contrib.google import make_google_blueprint, google
 import os
 from functools import wraps
-import my_db
+import my_db, pb
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -54,6 +54,12 @@ def google_login():
 
     my_db.add_user_and_login(user_info.get("name"), user_info.get("id"), user_info.get("email"))
 
+    token = pb.generate_token(user_info.get("id"))
+
+    if token:
+        my_db.update_user_token(user_info.get("id"), token)
+        session["token"] = token 
+        
     return redirect(url_for("dashboard"))
 
 @app.route("/logout")
