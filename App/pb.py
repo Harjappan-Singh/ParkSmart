@@ -28,8 +28,8 @@ def generate_token(user_id, user_access, ttl=60):
         elif user_access == "grant_read":
             token = grant_read_access_token(user_id, pubnub, ttl)
         else:
+            print("Bogus token, access has been revoked")
             token = "Bogus Token"
-        # TODO revoke access
         return token
     except Exception as e:
         print(f"Error generating token: {e}")
