@@ -70,6 +70,11 @@ def get_user(client_id):
     user = User.query.filter_by(client_id=client_id).first()
     return user
 
+# Get client_id from their user_id
+def get_client_id(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    return user.client_id if user else None
+
 # Update token for a user
 def update_user_token(client_id, token):
     user = get_user_row_if_exists(client_id)

@@ -54,7 +54,18 @@ def google_login():
 
     my_db.add_user_and_login(user_info.get("name"), user_info.get("id"), user_info.get("email"))
 
-    token = pb.generate_token(user_info.get("id"))
+    user_uuid = session["client_id"]
+    user = my_db.get_user(user_uuid)
+    access = "none"
+    if (user.read_access == 1 and user.write_access == 1):
+        access = "grant_read_write"
+    elif (user.read_access == 1):
+        access = "grant_read"
+    else:
+        access = "none"
+        
+    print(access)
+    token = pb.generate_token(user_info.get("id"), access)
 
     if token:
         my_db.update_user_token(user_info.get("id"), token)
@@ -127,6 +138,10 @@ def update_access():
             success = False
         
         if success:
+            user_uuid = my_db.get_client_id(user_id)
+            new_token = pb.refresh_token(user_uuid, action, ttl=60)
+            my_db.update_user_token(user_uuid, new_token)
+            session["token"] = new_token
             flash("User access updated successfully!", "success")
         else:
             flash("Failed to update user access.", "error")
@@ -183,6 +198,7 @@ def upgrade_subscription():
         success = False
     
     if success:
+        refresh_user_token()
         flash("User access updated successfully!", "success")
     else:
         flash("Failed to update user access.", "error")
@@ -193,8 +209,16 @@ def upgrade_subscription():
 def refresh_user_token():
     try:
         user_uuid = session["client_id"]
+        user = my_db.get_user(user_uuid)
+        access = "none"
+        if (user.read_access == 1 and user.write_access == 1):
+            access = "grant_read_write"
+        elif (user.read_access == 1):
+            access = "grant_read"
+        else:
+            access = "none"
 
-        new_token = pb.refresh_token(user_uuid, ttl=5)
+        new_token = pb.refresh_token(user_uuid, access, ttl=60)
 
         my_db.update_user_token(user_uuid, new_token)
 

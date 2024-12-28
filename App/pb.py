@@ -17,12 +17,35 @@ def initialize_pubnub(uuid):
     return PubNub(pnconfig)
 
     
-def generate_token(user_id, ttl=60):
+def generate_token(user_id, user_access, ttl=60):
     try:
         pubnub = initialize_pubnub(user_id)
         
         # print(f"Granting token for user_id: {user_id}")
-        
+        if user_access == "grant_read_write":
+            token = grant_read_write_access_token(user_id, pubnub, ttl)
+
+        elif user_access == "grant_read":
+            token = grant_read_access_token(user_id, pubnub, ttl)
+        else:
+            token = "Bogus Token"
+        # TODO revoke access
+        return token
+    except Exception as e:
+        print(f"Error generating token: {e}")
+        return None
+
+def refresh_token(user_id, user_access, ttl=60):
+    try:
+        new_token = generate_token(user_id, user_access, ttl=ttl)
+        return new_token
+    except Exception as e:
+        print(f"Error in refresh_token: {e}")
+        return None
+    
+# granting token with read write access
+def grant_read_write_access_token(user_id, pubnub, ttl):   
+        print(f"Granting read and write token for user_id: {user_id}")  
         envelope = pubnub.grant_token() \
             .channels([Channel.id(CHANNEL_NAME).read().write()]) \
             .authorized_uuid(user_id) \
@@ -30,16 +53,16 @@ def generate_token(user_id, ttl=60):
             .sync() 
         
         token = envelope.result.token 
-        print(token)
         return token
-    except Exception as e:
-        print(f"Error generating token: {e}")
-        return None
 
-def refresh_token(user_id, ttl=60):
-    try:
-        new_token = generate_token(user_id, ttl=ttl)
-        return new_token
-    except Exception as e:
-        print(f"Error in refresh_token: {e}")
-        return None
+# granting token with read access
+def grant_read_access_token(user_id, pubnub, ttl):   
+        print(f"Granting read token for user_id: {user_id}")  
+        envelope = pubnub.grant_token() \
+            .channels([Channel.id(CHANNEL_NAME).read()]) \
+            .authorized_uuid(user_id) \
+            .ttl(ttl) \
+            .sync() 
+        
+        token = envelope.result.token 
+        return token
