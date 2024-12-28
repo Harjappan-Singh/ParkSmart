@@ -30,6 +30,10 @@
                class="hover:text-green-600 transition {{ 'text-green-600 font-bold' if request.endpoint == 'admin_panel' else '' }}">
                 Admin Panel
             </a>
+            <a href="{{ url_for('subscriptions') }}" 
+               class="hover:text-green-600 transition {{ 'text-green-600 font-bold' if request.endpoint == 'subscriptions' else '' }}">
+                Subscriptions
+            </a>
         </nav>
     </div>
 
@@ -46,6 +50,10 @@
         <a href="{{ url_for('admin_panel') }}" 
            class="block px-4 py-2 hover:bg-gray-100 hover:text-green-600 transition {{ 'bg-gray-100 text-green-600 font-bold' if request.endpoint == 'admin_panel' else '' }}">
             Admin Panel
+        </a>
+        <a href="{{ url_for('subscriptions') }}" 
+           class="block px-4 py-2 hover:bg-gray-100 hover:text-green-600 transition {{ 'bg-gray-100 text-green-600 font-bold' if request.endpoint == 'subscriptions' else '' }}">
+            Subscriptions
         </a>
     </div>
 </div>

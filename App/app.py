@@ -157,5 +157,30 @@ def save_sensor_data():
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
+@app.route("/subscriptions")
+@login_required
+def subscriptions():
+    return render_template("subscription.html")
+
+@app.route("/upgrade_subscription", methods=["POST"])
+@login_required
+def upgrade_subscription():
+    user_id = my_db.get_user_id(session["client_id"])
+    action = request.form.get("action")
+    if action == "grant_read":
+        success = my_db.update_user_access(user_id, read_access=1, write_access=0)
+    elif action == "grant_read_write":
+        success = my_db.update_user_access(user_id, read_access=1, write_access=1)
+    elif action == "revoke_access":
+        success = my_db.update_user_access(user_id, read_access=0, write_access=0)
+    else:
+        success = False
+    
+    if success:
+        flash("User access updated successfully!", "success")
+    else:
+        flash("Failed to update user access.", "error")
+    
+    return redirect(url_for("dashboard"))
 if __name__ == "__main__":
     app.run(port = 5000, debug = True)
