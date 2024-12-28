@@ -2,33 +2,59 @@
 
 {% block body %}
 
+
 <div class="min-h-screen bg-gradient-to-br from-gray-100 to-gray-50 text-gray-800">
     <div class="container mx-auto p-6">
-        <h1 class="text-4xl font-bold text-center mb-8">Dashboard</h1>
+        <h1 class="text-4xl font-bold text-center mb-8 text-blue-600">Dashboard</h1>
+
+        <h2 class="text-xl font-semibold text-gray-700 mb-4">Hello, {{ session.user }}</h2>
+
+        <div class="mb-6">
+            {% if user_access.access == "read_and_write" %}
+                <div class="bg-gradient-to-r from-green-300 via-green-350 to-green-400 text-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-semibold">Subscription Level: Elite Access</h3>
+                    <p class="mt-2">Read and Write Access - Both LEDs and Monitoring enabled.</p>
+                </div>
+            {% endif %}
+            {% if user_access.access == "read" %}
+                <div class="bg-gradient-to-r from-yellow-300 via-yellow-350 to-yellow-400 text-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-semibold">Subscription Level: Standard Access</h3>
+                    <p class="mt-2">Read Access - LED functionality is disabled.</p>
+                </div>
+            {% endif %}
+            {% if user_access.access == "none" %}
+                <div class="bg-gradient-to-r from-red-300 via-red-350 to-red-400 text-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-semibold">Subscription Level: No Access</h3>
+                    <p class="mt-2">Upgrade your subscription to access functionality.</p>
+                </div>
+            {% endif %}
+        </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
             <div class="form-control w-full max-w-xs mx-auto card">
                 <label class="label cursor-pointer">
                     <span class="label-text text-lg font-medium">Monitor Parking Space</span>
-                    <input type="checkbox" class="toggle toggle-warning" id="parkSmartMonitorToggle" />
+                    <input type="checkbox" class="toggle toggle-warning" id="parkSmartMonitorToggle" {% if user_access.access == "none"%}disabled{% endif %}/>
                 </label>
             </div>
 
             <div class="form-control w-full max-w-xs mx-auto card">
                 <label class="label cursor-pointer">
                     <span class="label-text text-lg font-medium">Red LED</span>
-                    <input type="checkbox" class="toggle toggle-error" id="redLedToggle" />
+                    <input type="checkbox" class="toggle toggle-error" id="redLedToggle" {% if user_access.access == "none" or user_access.access == "read"%}disabled{% endif %}/>
                 </label>
             </div>
 
             <div class="form-control w-full max-w-xs mx-auto card">
                 <label class="label cursor-pointer">
                     <span class="label-text text-lg font-medium">Green LED</span>
-                    <input type="checkbox" class="toggle toggle-success" id="greenLedToggle" />
+                    <input type="checkbox" class="toggle toggle-success" id="greenLedToggle" {% if user_access.access == "none" or user_access.access == "read"%}disabled{% endif %}/>
                 </label>
             </div>
         </div>
 
+        {% if user_access.access == "none"%}
+        {% else %}
         <div class="card text-center mb-8">
             <p class="text-xl font-semibold">
                 Current Vehicles Inside Parking Lot: 
@@ -37,24 +63,25 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="card">
+            <div class="card bg-blue-100 p-4 rounded-lg shadow-md">
                 <h3 class="text-lg font-semibold mb-2">Parking Space 1</h3>
                 <span class="space1 text-muted-color">...</span>
             </div>
-            <div class="card">
+            <div class="card bg-blue-100 p-4 rounded-lg shadow-md">
                 <h3 class="text-lg font-semibold mb-2">Parking Space 2</h3>
                 <span class="space2 text-muted-color">...</span>
             </div>
-            <div class="card">
+            <div class="card bg-blue-100 p-4 rounded-lg shadow-md">
                 <h3 class="text-lg font-semibold mb-2">Parking Space 3</h3>
                 <span class="space3 text-muted-color">...</span>
             </div>
-            <div class="card">
+            <div class="card bg-blue-100 p-4 rounded-lg shadow-md">
                 <h3 class="text-lg font-semibold mb-2">Parking Space 4</h3>
                 <span class="space4 text-muted-color">...</span>
             </div>
         </div>
-
+        {% endif %}
+        
         <div class="container mx-auto px-6 py-12 text-center">
             <a href="{{ url_for('logout') }}"
                 class="inline-flex items-center px-6 py-3 bg-blue-600 text-white text-lg font-medium rounded-lg shadow hover:bg-blue-700 transition">

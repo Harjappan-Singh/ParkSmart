@@ -65,6 +65,11 @@ def get_user_id(client_id):
     user = User.query.filter_by(client_id=client_id).first()
     return user.id if user else None
 
+# Get user from their client id
+def get_user(client_id):
+    user = User.query.filter_by(client_id=client_id).first()
+    return user
+
 class Parking_Lot(db.Model):
     __tablename__ = "parking_lot"
     id = db.Column(db.Integer, primary_key=True)

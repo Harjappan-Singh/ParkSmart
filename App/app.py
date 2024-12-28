@@ -77,7 +77,14 @@ def not_authorized():
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template("dashboard.html")
+    user = my_db.get_user(session["client_id"])
+    if user.read_access == 1 and user.write_access == 1:
+        access_level = {'access':'read_and_write'}
+    elif user.read_access == 1:
+        access_level = {'access': 'read'}
+    else:
+        access_level = {'access': 'none'}
+    return render_template("dashboard.html", user_access = access_level)
 
 @app.route("/admin_panel")
 @login_required
