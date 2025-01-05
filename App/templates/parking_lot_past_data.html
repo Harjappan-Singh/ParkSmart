@@ -3,27 +3,31 @@
 {% block body %}
 <div class="min-h-screen bg-gradient-to-br from-gray-100 to-gray-50 text-gray-800">
     <div class="container mx-auto px-6 py-8">
-        <h1 class="text-3xl font-bold mb-6 text-center">Parking Lot Information</h1>
+        <h1 class="text-4xl font-bold mb-8 text-center text-blue-600">Parking Lot Information</h1>
 
         <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
-            <table class="table-auto w-full text-left text-gray-700">
-                <thead class="bg-gray-200">
+            <table class="table-auto w-full text-left">
+                <thead class="bg-blue-600 text-white">
                     <tr>
-                        <th class="px-4 py-2 border-b border-gray-300">Parking Spot</th>
-                        <th class="px-4 py-2 border-b border-gray-300">Status</th>
-                        <th class="px-4 py-2 border-b border-gray-300">Timestamp</th>
+                        <th class="px-6 py-4 border-b">Parking Spot</th>
+                        <th class="px-6 py-4 border-b">Status</th>
+                        <th class="px-6 py-4 border-b">Timestamp</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for entry in entries %}
-                    <tr class="even:bg-gray-100 odd:bg-white">
-                        <td class="px-4 py-2 border-b border-gray-300">{{ entry.parking_spot }}</td>
-                        <td class="px-4 py-2 border-b border-gray-300">
-                            <span class="{{ 'text-green-600 font-semibold' if entry.status == 'available' else 'text-red-600 font-semibold' }}">
-                                {{ entry.status }}
-                            </span>
+                    <tr class="hover:bg-blue-50 even:bg-gray-50 odd:bg-white">
+                        <td class="px-6 py-4 border-b font-medium text-gray-800">{{ entry.parking_spot }}</td>
+                        <td class="px-6 py-4 border-b">
+                            <div class="flex items-center space-x-2">
+                                {% if entry.status == 'available' %}
+                                    <span class="text-green-600 font-semibold">🟢 {{ entry.status }}</span>
+                                {% else %}
+                                    <span class="text-red-600 font-semibold">🔴 {{ entry.status }}</span>
+                                {% endif %}
+                            </div>
                         </td>
-                        <td class="px-4 py-2 border-b border-gray-300">{{ entry.timestamp }}</td>
+                        <td class="px-6 py-4 border-b text-gray-600">{{ entry.timestamp }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
