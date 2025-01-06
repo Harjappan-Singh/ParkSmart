@@ -6,6 +6,7 @@ import os
 from functools import wraps
 import my_db, pb
 from dotenv import load_dotenv
+import paypalrestsdk
 
 load_dotenv()
 
@@ -31,6 +32,12 @@ db = my_db.db
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("MYSQL_DATABASE_URI")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
+
+paypalrestsdk.configure({
+    "mode": "sandbox",  # Use "live" for production
+    "client_id": os.getenv("PAY_PAL_CLIENT_ID"),
+    "client_secret": os.getenv("PAY_PAL_CLIENT_SECRET")
+})
 
 @app.route("/")
 def index():
@@ -183,28 +190,6 @@ def save_sensor_data():
 def subscriptions():
     return render_template("subscription.html")
 
-@app.route("/upgrade_subscription", methods=["POST"])
-@login_required
-def upgrade_subscription():
-    user_id = my_db.get_user_id(session["client_id"])
-    action = request.form.get("action")
-    if action == "grant_read":
-        success = my_db.update_user_access(user_id, read_access=1, write_access=0)
-    elif action == "grant_read_write":
-        success = my_db.update_user_access(user_id, read_access=1, write_access=1)
-    elif action == "revoke_access":
-        success = my_db.update_user_access(user_id, read_access=0, write_access=0)
-    else:
-        success = False
-    
-    if success:
-        refresh_user_token()
-        flash("User access updated successfully!", "success")
-    else:
-        flash("Failed to update user access.", "error")
-    
-    return redirect(url_for("dashboard"))
-
 @app.route("/refresh_user_token", methods=["POST"])
 def refresh_user_token():
     try:
@@ -228,6 +213,82 @@ def refresh_user_token():
     except Exception as e:
         print(f"Error in refresh_token_endpoint: {e}")
         return jsonify({"error": "Internal server error"}), 500
+
+@app.route('/upgrade_subscription', methods=['POST'])
+def upgrade_subscription():
+    # Create a payment
+    action = request.form.get("action")
+    if action == "grant_read":
+        amount = "15.99"
+    elif action == "grant_read_write":
+        amount = "24.99"
+    payment = paypalrestsdk.Payment({
+        "intent": "sale",
+        "payer": {
+            "payment_method": "paypal"
+        },
+        "redirect_urls": {
+            "return_url": url_for('payment_success', action = action, _external=True),
+            "cancel_url": url_for('payment_cancel', _external=True)
+        },
+        "transactions": [{
+            "item_list": {
+                "items": [{
+                    "name": "Subscription Upgrade",
+                    "sku": "001",
+                    "price": amount,
+                    "currency": "EUR",
+                    "quantity": 1
+                }]
+            },
+            "amount": {
+                "total": amount,
+                "currency": "EUR"
+            },
+            "description": "Upgrade subscription."
+        }]
+    })
+
+    if payment.create():
+        for link in payment.links:
+            if link.rel == "approval_url":
+                return redirect(link.href)
+    else:
+        flash("Failed to create PayPal payment. Please try again.", "error")
+        return redirect(url_for("dashboard"))
+
+@app.route('/payment_success')
+def payment_success():
+    user_id = my_db.get_user_id(session["client_id"])
+    action = request.args.get("action")
+
+    payment_id = request.args.get('paymentId')
+    payer_id = request.args.get('PayerID')
+
+    payment = paypalrestsdk.Payment.find(payment_id)
+
+    if payment.execute({"payer_id": payer_id}):
+        if action == "grant_read":
+            success = my_db.update_user_access(user_id, read_access=1, write_access=0)
+        elif action == "grant_read_write":
+            success = my_db.update_user_access(user_id, read_access=1, write_access=1)
+        else:
+            success = False
+
+        if success:
+            refresh_user_token()
+            flash("Payment successful! Your subscription has been upgraded.")
+        else:
+            flash("Payment successful, but failed to update subscription.", "error")
+    else:
+        flash("Payment failed. Please try again.", "error")
+
+    return redirect(url_for("dashboard"))
+
+@app.route('/payment_cancel')
+def payment_cancel():
+    flash("Payment canceled by user.") 
+    return redirect(url_for("dashboard"))
 
 if __name__ == "__main__":
     app.run(port = 5000, debug = True)
