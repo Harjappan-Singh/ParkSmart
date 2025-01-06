@@ -34,6 +34,10 @@
                class="hover:text-green-600 transition {{ 'text-green-600 font-bold' if request.endpoint == 'subscriptions' else '' }}">
                 Subscriptions
             </a>
+              <a href="{{ url_for('contact_us') }}" 
+               class="hover:text-green-600 transition {{ 'text-green-600 font-bold' if request.endpoint == 'contact_us' else '' }}">
+                Contact
+            </a>
         </nav>
     </div>
 
