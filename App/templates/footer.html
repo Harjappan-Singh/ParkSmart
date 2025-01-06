@@ -1,0 +1,34 @@
+<footer class="bg-gray-800 text-gray-300">
+    <div class="container mx-auto py-8 px-4 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-4">About Us</h3>
+                <p class="text-sm">
+                    We provide cutting-edge solutions to monitor parking spaces efficiently. 
+                    Our goal is to make parking-lot monitoring smarter and hassle-free.
+                </p>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-4">Quick Links</h3>
+                <ul class="space-y-2">
+                    <li><a href="{{ url_for('dashboard') }}" class="hover:text-green-400">Dashboard</a></li>
+                    <li><a href="{{ url_for('view_past_data') }}" class="hover:text-green-400">Past Data</a></li>
+                    <li><a href="{{ url_for('admin_panel') }}" class="hover:text-green-400">Admin Panel</a></li>
+                    <li><a href="{{ url_for('subscriptions') }}" class="hover:text-green-400">Subscriptions</a></li>
+                    <li><a href="{{ url_for('contact_us') }}" class="hover:text-green-400">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-4">Contact</h3>
+                <ul class="space-y-2 text-sm">
+                    <li>Email: <a href="mailto:singhharjappan@gmail.com" class="hover:text-green-400">singhharjappan@gmail.com</a></li>
+                    <li>Phone: <a href="tel:875099119" class="hover:text-green-400">+353 875099119</a></li>
+                    <li>Address: ParkSmart HQ, Dublin Rd, Marshes Upper, Dundalk, Co. Louth, A91 K584</li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 mt-8 pt-4">
+            <p class="text-center text-sm">&copy; {{ current_year }} Park Smart Solutions. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
