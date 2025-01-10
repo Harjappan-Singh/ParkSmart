@@ -16,6 +16,7 @@
 -   **History Logs**: Maintains a record of parking space occupancy.
 -   **User Authentication**: Secure Google OAuth login for access.
 -   **Role-Based Access**: Differentiated permissions for monitoring and control.
+-   **Subscription Management**: Users can choose subscription plans and gain access upon successful payment via PayPal.
 
 ----------
 
@@ -23,7 +24,7 @@
 
 The following diagram illustrates the data flow within the system:
 
-<img width="800" alt="system_architecture" src="https://github.com/user-attachments/assets/ff8a8aac-3d03-46fa-bdb0-86f7b91ad723" />
+<img width="800" alt="system_architecture" src="https://github.com/user-attachments/assets/8082e312-513c-470a-b356-fcd1aa9e129c" />
 
 ----------
 
@@ -64,6 +65,13 @@ The sensors and actuators are connected to a Raspberry Pi, ensuring security by 
 <img width="800" alt="google_auth" src="https://github.com/user-attachments/assets/32280faa-4fde-4afe-9bbc-38c3f2034ab2" />
 <img width="800" alt="access_forbidden" src="https://github.com/user-attachments/assets/06df21a9-b395-4e22-bd93-d48c84e1f123" />
 
+### PayPal Integration
+
+- Users can select from various subscription plans to access the platform's features.
+- Upon selecting a plan, they are redirected to PayPal for secure payment processing.
+- After a successful payment, access is granted to the selected subscription.
+- PayPal API ensures secure and reliable payment transactions.
+
 ----------
 
 ## 📡 Real-Time Communication with PubNub
@@ -80,26 +88,26 @@ All data in transit is encrypted with a cipher key.
 ---
 
 ### 2. **Access Control**
-<img width="800" alt="subscriptions" src="https://github.com/user-attachments/assets/821b169f-7868-4b72-92f4-9540d33b95eb" />
+<img width="800" alt="subscriptions" src="https://github.com/user-attachments/assets/29d01ff8-89ac-46c7-9e0c-d5a6a82325cd" />
 
 - **Read**: Users can only monitor parking spaces.  
 <div align="center">
-    <img width="800" alt="standard_subs" src="https://github.com/user-attachments/assets/e5e70420-b286-4b92-92a1-ae3b0f023a29" />
+    <img width="800" alt="standard_subs" src="https://github.com/user-attachments/assets/3a759486-bab7-42a5-8cc0-dd6e86bbf973" />
 </div>
 
 - **Read and Write**: Users can control LEDs remotely (e.g., during maintenance).  
 <div align="center">
-    <img width="800" alt="elite_subs" src="https://github.com/user-attachments/assets/c2f4dd51-cd5b-4dc3-aca8-7f19ff3a92bc" />
+    <img width="800" alt="elite_subs" src="https://github.com/user-attachments/assets/ddcba8f6-c8ac-4c67-93db-7ca72f17451d" />
 </div>
 
 - **None**: No access.  
 <div align="center">
-    <img width="800" alt="no_subs" src="https://github.com/user-attachments/assets/d2e55cb9-c834-4b48-91de-f1230c3b8aa1" />
+    <img width="800" alt="no_subs" src="https://github.com/user-attachments/assets/84da640b-d764-49f9-a7a8-fd173f7a760d" />
 </div>
 
 Only admins can revoke user access levels.  
 <div align="center">
-    <img width="800" alt="admin_panel" src="https://github.com/user-attachments/assets/417df024-5b45-41ff-89e6-4b5979a90cb2" />
+    <img width="800" alt="admin_panel" src="https://github.com/user-attachments/assets/a0a8bb83-170d-47bb-92c2-fbd4ca6ff98f" />
 </div>
 
 ----------
@@ -129,7 +137,7 @@ id, user_id, parking_spot, status, timestamp
 -   Secrets and credentials are stored securely in `.env` files.
 -   Database access is secured with triggers and role-based permissions.
 <div align="center">
-    <img width="800" alt="frontend_database" src="https://github.com/user-attachments/assets/bffb30fa-1635-4fd0-8ea1-20a7aa5a7593" style="display: inline-block; margin-right: 10px;" />
+    <img width="800" alt="frontend_database" src="https://github.com/user-attachments/assets/36e45545-ce65-42df-aef6-1e18fae4c659" style="display: inline-block; margin-right: 10px;" />
     <img width="800" alt="database" src="https://github.com/user-attachments/assets/53b6a88b-b7db-42b0-a078-0f9493a2651c" style="display: inline-block;" />
 </div>
 
@@ -144,6 +152,8 @@ id, user_id, parking_spot, status, timestamp
 -   **Authentication**: Google OAuth
 -   **Real-Time Communication**: PubNub
 -   **Hosting**: AWS
+-   **Payment Integration**: PayPal API
+
 
 ----------
 
