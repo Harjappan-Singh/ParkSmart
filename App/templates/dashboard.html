@@ -44,24 +44,17 @@
             {% endif %}
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6 mb-8">
             <div class="form-control w-full max-w-xs mx-auto card">
                 <label class="label cursor-pointer">
-                    <span class="label-text text-lg font-medium">Monitor Parking Space</span>
-                    <input type="checkbox" class="toggle toggle-warning" id="parkSmartMonitorToggle" {% if user_access.access == "none"%}disabled{% endif %}/>
-                </label>
-            </div>
-
-            <div class="form-control w-full max-w-xs mx-auto card">
-                <label class="label cursor-pointer">
-                    <span class="label-text text-lg font-medium">Red LED</span>
+                    <span class="label-text text-lg font-medium">Stop Traffic</span>
                     <input type="checkbox" class="toggle toggle-error" id="redLedToggle" {% if user_access.access == "none" or user_access.access == "read"%}disabled{% endif %}/>
                 </label>
             </div>
 
             <div class="form-control w-full max-w-xs mx-auto card">
                 <label class="label cursor-pointer">
-                    <span class="label-text text-lg font-medium">Green LED</span>
+                    <span class="label-text text-lg font-medium">Allow Traffic</span>
                     <input type="checkbox" class="toggle toggle-success" id="greenLedToggle" {% if user_access.access == "none" or user_access.access == "read"%}disabled{% endif %}/>
                 </label>
             </div>
@@ -71,7 +64,7 @@
         {% else %}
         <div class="card text-center mb-8">
             <p class="text-xl font-semibold">
-                Current Vehicles Inside Parking Lot: 
+                Cars entered in Parking Lot: 
                 <span id="vehicleCount" class="text-blue-500">0</span>
             </p>
         </div>

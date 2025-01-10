@@ -26,9 +26,10 @@ parking_triggered = False
 pnconfig = PNConfiguration()
 pnconfig.subscribe_key = os.getenv('PUBNUB_SUBSCRIBE_KEY')
 pnconfig.publish_key =  os.getenv('PUBNUB_PUBLISH_KEY')
-pnconfig.ssl = False
+pnconfig.ssl = True
 pnconfig.uuid = os.getenv('PUBNUB_PI_USER_ID')
 pnconfig.cipher_key = os.getenv('PUBNUB_CIPHER_KEY')
+pnconfig.secret_key = os.getenv('PUBNUB_SECRET_KEY')
 pnconfig.cipher_mode = AES.MODE_GCM
 pnconfig.fallback_cipher_mode = AES.MODE_CBC
 pnconfig.crypto_module = AesCbcCryptoModule(pnconfig)
@@ -58,12 +59,6 @@ def read_input_command(msg):
     elif msg == "{'greenLed': 'off'}":
         print("Turning off green LED")
         turn_off_green_LED()
-    elif msg == "{'parkSmartMonitor': 'on'}":
-        print("Monitoring start")
-        start_monitoring()
-    elif msg == "{'parkSmartMonitor': 'off'}":
-        print("Monitoring stopped")
-        stop_monitoring()
     else:
         print("Bad command, Try Again!!!!")
 
@@ -121,10 +116,10 @@ def monitor_space_availability():
 
         if distance < 5 and not parking_triggered:
             parking_triggered = True
-            publish_message({"P1": "occupied"})
+            publish_message({"P2": "occupied"})
         elif distance >= 5 and parking_triggered:
             parking_triggered = False
-            publish_message({"P1": "available"})
+            publish_message({"P2": "available"})
 
         time.sleep(1)
 
@@ -171,14 +166,6 @@ def handle_pubnub_message(message):
                 print("Turning off Green LED")
                 turn_off_green_LED()
 
-        if "parkSmartMonitor" in message:
-            if message["parkSmartMonitor"] == "on":
-                print("Monitoring started")
-                start_monitoring()
-            elif message["parkSmartMonitor"] == "off":
-                print("Monitoring stopped")
-                stop_monitoring()
-
     except Exception as e:
         print(f"Error processing message: {e}")
         # publish_message({"status": "Error processing command"})
@@ -199,6 +186,7 @@ def main():
         start_pubnub_listener()
         print("ParkSmart system is live. Listening for PubNub commands...")
         publish_message({"pubnub_channel": "True"})
+        start_monitoring()
 
         while True:
             time.sleep(1)
