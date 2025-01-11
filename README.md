@@ -72,6 +72,12 @@ The sensors and actuators are connected to a Raspberry Pi, ensuring security by 
 - After a successful payment, access is granted to the selected subscription.
 - PayPal API ensures secure and reliable payment transactions.
 
+### Data Visualization with Chart.js
+- Users can view graphical representations of parking lot usage over time with **line** and **bar charts**, providing better insights into parking trends and availability.
+
+- **Line Charts**: Show historical trends in parking space occupancy.
+- **Bar Charts**: Compare parking lot usage across different time intervals.
+
 ----------
 
 ## 📡 Real-Time Communication with PubNub
@@ -137,7 +143,7 @@ id, user_id, parking_spot, status, timestamp
 -   Secrets and credentials are stored securely in `.env` files.
 -   Database access is secured with triggers and role-based permissions.
 <div align="center">
-    <img width="800" alt="frontend_database" src="https://github.com/user-attachments/assets/36e45545-ce65-42df-aef6-1e18fae4c659" style="display: inline-block; margin-right: 10px;" />
+    <img width="800" alt="frontend_database" src="https://github.com/user-attachments/assets/9cb01a0b-ab19-4217-a5c0-6a1cc8dbef22" style="display: inline-block; margin-right: 10px;" />
     <img width="800" alt="database" src="https://github.com/user-attachments/assets/53b6a88b-b7db-42b0-a078-0f9493a2651c" style="display: inline-block;" />
 </div>
 
@@ -148,11 +154,40 @@ id, user_id, parking_spot, status, timestamp
 
 -   **Hardware**: Raspberry Pi, Ultrasonic Sensor, IR Beam Breaker, LEDs
 -   **Backend**: Python, Flask, MySQL
--   **Frontend**: HTML, Tailwind CSS, JavaScript
+-   **Frontend**: HTML, Tailwind CSS, JavaScript, Chart.js
 -   **Authentication**: Google OAuth
 -   **Real-Time Communication**: PubNub
 -   **Hosting**: AWS
 -   **Payment Integration**: PayPal API
+-   **Containerization**: Docker
+
+----------
+
+## 🐳 Docker Setup
+
+To containerize and run the **Park Smart** application using Docker, follow the steps below:
+
+1. **Clone the repository**:
+    ```bash
+    git clone https://github.com/Harjappan-Singh/ParkSmart.git
+    ```
+
+2. **Create a `.env` file**:
+    - Copy the contents from the `.env.example` file and add your own configurations, such as database credentials and secret keys.
+
+3. **Build the Docker image**:
+    ```bash
+    docker build -t parksmart .
+    ```
+
+4. **Run the Docker container**:
+    ```bash
+    docker run -d -p 5000:5000 --env-file .env parksmart
+    ```
+
+- The app will now be running at [http://localhost:5000](http://localhost:5000).
+
+Make sure Docker is installed and running on your machine before attempting to build and run the container.
 
 
 ----------
