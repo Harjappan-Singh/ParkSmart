@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, session, url_for, flash, request, jsonify
 import json
 import time
+from datetime import datetime
 from flask_dance.contrib.google import make_google_blueprint, google
 import os
 from functools import wraps
@@ -157,11 +158,24 @@ def update_access():
     else:
         return render_template("non_admin.html")
     
-@app.route("/view_past_data")
+@app.route("/view_past_data", methods=["GET"])
 @login_required
 def view_past_data():
     user_id = my_db.get_user_id(session["client_id"])
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+
     parking_lot_data = my_db.get_parking_entries_by_user(user_id=user_id)
+    
+    if start_date and end_date:
+        start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+        end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+
+        parking_lot_data = [
+            entry for entry in parking_lot_data 
+            if start_date <= entry.timestamp.date() <= end_date
+        ]
+
     parking_lot_entry_list = []
     for entry in parking_lot_data:
         parking_lot_entry_list.append({
@@ -169,7 +183,14 @@ def view_past_data():
             'status': entry.status,
             'timestamp': entry.timestamp,
         })
-    return render_template("parking_lot_past_data.html", entries = parking_lot_entry_list)
+    
+    return render_template(
+        "parking_lot_past_data.html", 
+        entries=parking_lot_entry_list, 
+        start_date=start_date.strftime("%Y-%m-%d") if start_date else None,
+        end_date=end_date.strftime("%Y-%m-%d") if end_date else None
+    )
+
 
 @app.route("/save_sensor_data", methods=["POST"])
 @login_required

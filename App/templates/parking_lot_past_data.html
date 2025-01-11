@@ -4,19 +4,59 @@
 <div class="min-h-screen bg-gradient-to-br from-gray-100 to-gray-50 text-gray-800">
     <div class="container mx-auto px-6 py-8">
         <h1 class="text-4xl font-bold mb-8 text-center text-blue-600">Parking Lot Information</h1>
+        
+        <div class="mb-6">
+            <form id="dateRangeForm" class="flex items-center space-x-4">
+                <label class="text-gray-700 font-medium">
+                    Start Date:
+                    <input 
+                        type="date" 
+                        name="start_date" 
+                        id="startDate" 
+                        class="border rounded-md px-4 py-2 mt-1 w-48" 
+                        value="{{ start_date }}">
+                </label>
+                <label class="text-gray-700 font-medium">
+                    End Date:
+                    <input 
+                        type="date" 
+                        name="end_date" 
+                        id="endDate" 
+                        class="border rounded-md px-4 py-2 mt-1 w-48" 
+                        value="{{ end_date }}">
+                </label>
+                <button 
+                    type="submit" 
+                    class="bg-blue-600 text-white rounded-md px-6 py-2 mt-1 hover:bg-blue-700 transition-colors">
+                    Filter
+                </button>
+            </form>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <h2 class="text-lg font-bold mb-4 text-blue-600">Parking Trends</h2>
+                <canvas id="lineChart" class="w-full h-64"></canvas>
+            </div>
+
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <h2 class="text-lg font-bold mb-4 text-blue-600">Parking Spot Usage</h2>
+                <canvas id="barChart" class="w-full h-64"></canvas>
+            </div>
+        </div>
 
         <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
-            <table class="table-auto w-full text-left">
+            <table class="table-auto w-full text-left border-collapse">
                 <thead class="bg-blue-600 text-white">
                     <tr>
-                        <th class="px-6 py-4 border-b">Parking Spot</th>
-                        <th class="px-6 py-4 border-b">Status</th>
-                        <th class="px-6 py-4 border-b">Timestamp</th>
+                        <th class="px-6 py-4 border-b text-sm font-medium">Parking Spot</th>
+                        <th class="px-6 py-4 border-b text-sm font-medium">Status</th>
+                        <th class="px-6 py-4 border-b text-sm font-medium">Timestamp</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for entry in entries %}
-                    <tr class="hover:bg-blue-50 even:bg-gray-50 odd:bg-white">
+                    <tr class="hover:bg-blue-50 even:bg-gray-50 odd:bg-white transition-all">
                         <td class="px-6 py-4 border-b font-medium text-gray-800">{{ entry.parking_spot }}</td>
                         <td class="px-6 py-4 border-b">
                             <div class="flex items-center space-x-2">
@@ -35,4 +75,113 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const parkingEntries = JSON.parse('{{ entries | tojson | safe }}');
+
+    const parkingSpots = [...new Set(parkingEntries.map(entry => entry.parking_spot))];
+
+    const hourlyOccupancy = Array(24).fill(0);
+
+    parkingEntries.forEach(entry => {
+        const hour = new Date(entry.timestamp).getHours(); 
+        if (entry.status === "occupied") {
+            hourlyOccupancy[hour] += 1;
+        }
+    });
+
+    const lineCtx = document.getElementById('lineChart').getContext('2d');
+    new Chart(lineCtx, {
+        type: 'line',
+        data: {
+            labels: Array.from({ length: 24 }, (_, i) => `${i}:00`), 
+            datasets: [{
+                label: 'Parking Lot Usage',
+                data: hourlyOccupancy, 
+                borderColor: 'hsl(210, 70%, 50%)',
+                fill: false
+            }],
+        },
+        options: {
+            plugins: {
+                legend: { display: true },
+                tooltip: { enabled: true },
+            },
+            responsive: true,
+            scales: {
+                x: {
+                    title: { display: true, text: "Hour of the Day" },
+                    ticks: { autoSkip: true, maxTicksLimit: 12 },
+                },
+                y: {
+                    title: { display: true, text: "Occupancy" },
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                    }
+                },
+            },
+        },
+    });
+    const barCtx = document.getElementById('barChart').getContext('2d');
+
+    function getDurationInHours(start, end) {
+        const startTime = new Date(start);
+        const endTime = new Date(end);
+        return (endTime - startTime) / (1000 * 60 * 60);
+    }
+
+    const usageData = parkingSpots.map(spot => {
+        let totalUsage = 0;
+        let currentOccupancyStart = null;
+
+        parkingEntries.forEach(entry => {
+            if (entry.parking_spot === spot) {
+                if (entry.status === "occupied") {
+                    if (!currentOccupancyStart) {
+                        currentOccupancyStart = entry.timestamp;
+                    }
+                } else if (entry.status === "available" && currentOccupancyStart) {
+                    totalUsage += getDurationInHours(currentOccupancyStart, entry.timestamp);
+                    currentOccupancyStart = null;
+                }
+            }
+        });
+
+        return totalUsage;
+    });
+
+    new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: parkingSpots,
+            datasets: [{
+                label: 'Usage in Hours',
+                data: usageData,
+                backgroundColor: parkingSpots.map((_, index) => `#3b82f6`),
+            }],
+        },
+        options: {
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: true },
+            },
+            responsive: true,
+            scales: {
+                x: { 
+                    title: { display: true, text: "Parking Spots" },
+                    ticks: {
+                        autoSkip: true
+                    }
+                },
+                y: {
+                    title: { display: true, text: "Usage in Hours" },
+                    beginAtZero: true
+                },
+            },
+        },
+    });
+});
+</script>
 {% endblock %}
